@@ -1,0 +1,23 @@
+{
+  "name": "envb",
+  "version": "1.0.0",
+  "description": "Ensure that you have environment variables set and get/fetch them.",
+  "main": "index.js",
+  "scripts": {
+    "test": "node test.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/buxlabs/envb.git"
+  },
+  "keywords": [
+    "dotenv",
+    "env"
+  ],
+  "author": "Emil Ajdyna <emil@ajdyna.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/buxlabs/envb/issues"
+  },
+  "homepage": "https://github.com/buxlabs/envb#readme"
+}
