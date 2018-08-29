@@ -2,6 +2,8 @@ const assert = require('assert')
 const { writeFileSync, unlinkSync } = require('fs')
 const { join } = require('path')
 const env = require('.')
+const { tmpdir } = require('os')
+const temp = tmpdir()
 
 function describe (description, callback) { callback() }
 function context (description, callback) { callback() }
@@ -46,7 +48,7 @@ describe('envb', function () {
       it('throws an exception', function () {
         let raised = false
         try {
-          env.load()
+          env.load({ location: temp })
         } catch (exception) {
           raised = true
         }
@@ -56,11 +58,11 @@ describe('envb', function () {
 
     context('when .env file is not present', function () {
       it('throws an exception', function () {
-        const file = join(__dirname, '.env.example')
+        const file = join(temp, '.env.example')
         writeFileSync(file, 'HELLO=world')
         let raised = false
         try {
-          env.load()
+          env.load({ location: temp })
         } catch (exception) {
           raised = true
         }
@@ -69,20 +71,33 @@ describe('envb', function () {
       })
     })
     context('when .env.example and .env are present', function () {
-      context('when .env is empty', function () {
-        it('throws an exception', function () {
-          const file1 = join(__dirname, '.env.example')
-          const file2 = join(__dirname, '.env')
+      context('when .env is missing keys from .env.example', function () {
+        it('assigns the values from the .env file', function () {
+          const file1 = join(temp, '.env.example')
+          const file2 = join(temp, '.env')
           writeFileSync(file1, 'HELLO=world')
-          writeFileSync(file2, '')
+          writeFileSync(file2, 'WORLD=hello')
           let raised = false
           try {
-            env.load()
+            env.load({ location: temp })
           } catch (exception) {
             raised = true
           }
           unlinkSync(file1)
           unlinkSync(file2)
+          assert(raised)
+        })
+      })
+      context('when .env is not empty', function () {
+        it('assigns the values from the .env file', function () {
+          const file1 = join(temp, '.env.example')
+          const file2 = join(temp, '.env')
+          writeFileSync(file1, 'HELLO=world')
+          writeFileSync(file2, 'HELLO=world')
+          env.load({ location: temp })
+          unlinkSync(file1)
+          unlinkSync(file2)
+          assert(env.get('HELLO') === 'world')
         })
       })
     })
