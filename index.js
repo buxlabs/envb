@@ -40,15 +40,6 @@ class Environment {
   load (options = {}) {
     const example = parse(readFileSync(join(options.location || process.cwd(), '.env.example'), 'utf8'))
     const env = parse(readFileSync(join(options.location || process.cwd(), '.env'), 'utf8'))
-    const missing = []
-    for (let key in example) {
-      if (!env[key]) {
-        missing.push(key)
-      }
-    }
-    if (missing.length > 0) {
-      throw new Error(`Missing variables in .env file: ${missing.join(', ')}`)
-    }
     this.env = assign(this.env, env)
     return this.env
   }

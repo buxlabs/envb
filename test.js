@@ -71,23 +71,6 @@ describe('envb', function () {
       })
     })
     context('when .env.example and .env are present', function () {
-      context('when .env is missing keys from .env.example', function () {
-        it('assigns the values from the .env file', function () {
-          const file1 = join(temp, '.env.example')
-          const file2 = join(temp, '.env')
-          writeFileSync(file1, 'HELLO=world')
-          writeFileSync(file2, 'WORLD=hello')
-          let raised = false
-          try {
-            env.load({ location: temp })
-          } catch (exception) {
-            raised = true
-          }
-          unlinkSync(file1)
-          unlinkSync(file2)
-          assert(raised)
-        })
-      })
       context('when .env is not empty', function () {
         it('assigns the values from the .env file', function () {
           const file1 = join(temp, '.env.example')
