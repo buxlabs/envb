@@ -1,6 +1,6 @@
 {
   "name": "envb",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Ensure that you have environment variables set and get/fetch them.",
   "main": "index.js",
   "scripts": {
