@@ -10,7 +10,7 @@ envb is a library that allows you to safely use environment variables. It provid
 $ npm install envb
 ```
 Create  **.env** and **.env.example** files in the root directory of your project.
-The **.env** file should contain variables which will be added to the **process.env**.
+The **.env** file should contain variables which ou want to use.
 
 > .env
 ```
