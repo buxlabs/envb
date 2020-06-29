@@ -44,41 +44,43 @@ describe('envb', function () {
     })
 
     context('when an environment variable is not defined', function () {
-      it('throws an exception', function () {
-        let raised = false
+      it('throws an error', function () {
+        let exception = null
         try {
           env.fetch('UNDEFINED_ENVIRONMENT_VARIABLE')
-        } catch (exception) {
-          raised = true
+        } catch (error) {
+          exception = error
         }
-        assert(raised)
+        assert(exception)
       })
     })
   })
   describe('#load', function () {
     context('when .env.example file is not present', function () {
-      it('throws an exception', function () {
-        let raised = false
+      it('throws an error', function () {
+        let exception = null
         try {
           env.load({ location: temp })
-        } catch (exception) {
-          raised = true
+        } catch (error) {
+          exception = error
         }
-        assert(raised)
+        assert(exception)
+        assert(exception.message.includes(".env.example file is missing"))
       })
     })
 
     context('when .env file is not present', function () {
-      it('throws an exception', function () {
+      it('throws an error', function () {
         const file = join(temp, '.env.example')
         writeFileSync(file, 'HELLO=world')
-        let raised = false
+        let exception = null
         try {
           env.load({ location: temp })
-        } catch (exception) {
-          raised = true
+        } catch (error) {
+          exception = error
         }
-        assert(raised)
+        assert(exception)
+        assert(exception.message.includes(".env file is missing"))
         unlinkSync(file)
       })
     })

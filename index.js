@@ -25,6 +25,22 @@ function parse (string) {
   return object
 }
 
+function read (path) {
+  try {
+    return parse(readFileSync(path, 'utf8'))
+  } catch (exception) {
+    if (exception.code === 'ENOENT') {
+      if (path.endsWith('.env')) {
+        throw new Error(`[envb] .env file is missing at path ${path}`, exception)
+      } else if (path.endsWith('.env.example')) {
+        throw new Error(`[envb] .env.example file is missing at path ${path}`, exception)
+      }
+
+    }
+    throw exception
+  }
+}
+
 class Environment {
   constructor () {
     this.env = assign({}, process.env)
@@ -41,8 +57,9 @@ class Environment {
     return this.env[key]
   }
   load (options = {}) {
-    const example = parse(readFileSync(join(options.location || process.cwd(), '.env.example'), 'utf8'))
-    const env = parse(readFileSync(join(options.location || process.cwd(), '.env'), 'utf8'))
+    const path = options.location || process.cwd()
+    const example = read(join(path, '.env.example'))
+    const env = read(join(path, '.env'))
     this.env = assign(this.env, env)
     this.loaded = true
     return this.env
