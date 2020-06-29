@@ -28,11 +28,14 @@ function parse (string) {
 class Environment {
   constructor () {
     this.env = assign({}, process.env)
+    this.loaded = false
   }
   get (key) {
+    if (!this.loaded) { this.load() }
     return this.env[key]
   }
   fetch (key) {
+    if (!this.loaded) { this.load() }
     const value = this.env[key]
     if (!value) { throw `Environment variable ${key} is empty.` }
     return this.env[key]
@@ -41,6 +44,7 @@ class Environment {
     const example = parse(readFileSync(join(options.location || process.cwd(), '.env.example'), 'utf8'))
     const env = parse(readFileSync(join(options.location || process.cwd(), '.env'), 'utf8'))
     this.env = assign(this.env, env)
+    this.loaded = true
     return this.env
   }
 }

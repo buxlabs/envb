@@ -17,6 +17,12 @@ describe('envb', function () {
       })
     })
 
+    context('when a variable is present in the .env file', function () {
+      it('returns it', function () {
+        assert(env.get('TEST_1'))
+      })
+    })
+
     context('when an environment variable is not defined', function () {
       it('returns undefined', function () {
         assert.deepEqual(env.get('UNDEFINED_ENVIRONMENT_VARIABLE'), undefined)
@@ -28,6 +34,12 @@ describe('envb', function () {
     context('when an environment variable is present', function () {
       it('returns it', function () {
         assert(env.fetch('PATH'))
+      })
+    })
+
+    context('when a variable is present in the .env file', function () {
+      it('returns it', function () {
+        assert(env.fetch('TEST_1'))
       })
     })
 
