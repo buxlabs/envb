@@ -28,6 +28,18 @@ describe('envb', function () {
         assert.deepEqual(env.get('UNDEFINED_ENVIRONMENT_VARIABLE'), undefined)
       })
     })
+
+    context('when fetch is called with an array of strings', function () {
+      it('returns many results', function () {
+        assert.deepEqual(env.get(['PATH', 'TEST_1']), [process.env.PATH, 'true'])
+      })
+
+      context('when any of the keys is not defined', function () {
+        it('returns undefined for that key', function () {
+          assert.deepEqual(env.get(['PATH', 'UNDEFINED_ENVIRONMENT_VARIABLE']), [process.env.PATH, undefined])
+        })
+      })
+    })
   })
 
   describe('#fetch', function () {
@@ -54,13 +66,31 @@ describe('envb', function () {
         assert(exception)
       })
     })
+
+    context('when fetch is called with an array of strings', function () {
+      it('returns many results', function () {
+        assert.deepEqual(env.fetch(['PATH', 'TEST_1']), [process.env.PATH, 'true'])
+      })
+
+      context('when any of the keys is not defined', function () {
+        it('throws an error', function () {
+          let exception = null
+          try {
+            env.fetch(['PATH', 'UNDEFINED_ENVIRONMENT_VARIABLE'])
+          } catch (error) {
+            exception = error
+          }
+          assert(exception)
+        })
+      })
+    })
   })
   describe('#load', function () {
     context('when .env.example file is not present', function () {
       it('throws an error', function () {
         let exception = null
         try {
-          env.load({ location: temp })
+          env.load({ path: temp })
         } catch (error) {
           exception = error
         }
@@ -75,7 +105,7 @@ describe('envb', function () {
         writeFileSync(file, 'HELLO=world')
         let exception = null
         try {
-          env.load({ location: temp })
+          env.load({ path: temp })
         } catch (error) {
           exception = error
         }
@@ -91,7 +121,7 @@ describe('envb', function () {
           const file2 = join(temp, '.env')
           writeFileSync(file1, 'HELLO=world')
           writeFileSync(file2, 'HELLO=world')
-          env.load({ location: temp })
+          env.load({ path: temp })
           unlinkSync(file1)
           unlinkSync(file2)
           assert(env.get('HELLO') === 'world')

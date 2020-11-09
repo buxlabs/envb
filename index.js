@@ -48,16 +48,26 @@ class Environment {
   }
   get (key) {
     if (!this.loaded) { this.load() }
+    if (Array.isArray(key)) {
+      return key.map(id => this.env[id])
+    }
     return this.env[key]
   }
   fetch (key) {
     if (!this.loaded) { this.load() }
+    if (Array.isArray(key)) {
+      return key.map(id => {
+        const value = this.env[id]
+        if (!value) { throw `Environment variable ${key} is empty.` }
+        return value
+      })
+    }
     const value = this.env[key]
     if (!value) { throw `Environment variable ${key} is empty.` }
     return this.env[key]
   }
   load (options = {}) {
-    const path = options.location || process.cwd()
+    const path = options.path || process.cwd()
     const example = read(join(path, '.env.example'))
     const env = read(join(path, '.env'))
     this.env = assign(this.env, env)
